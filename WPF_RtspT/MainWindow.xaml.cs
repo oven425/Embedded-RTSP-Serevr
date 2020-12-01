@@ -36,15 +36,51 @@ namespace WPF_RtspT
         {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8554));
+            CRtspRequest req = new CRtspRequest();
+            req.Command = RtspCommands.OPTIONS;
+            req.URL = new Uri("rtsp://127.0.0.1:8554/test");
+            req.Version = "RTSP/1.0";
+            req.CSeq = req.CSeq + 1;
             string send_str = "OPTIONS rtsp://example.com/media.mp4 RTSP/1.0" + "\r\n";
             send_str = send_str + "CSeq: 1" + "\r\n";
             send_str = send_str + "\r\n";
+            send_str = req.ToString();
+            System.Diagnostics.Trace.WriteLine(send_str);
             socket.Send(Encoding.UTF8.GetBytes(send_str));
             byte[] recv_buf = new byte[8192];
             int recv_len = socket.Receive(recv_buf);
+            string recv_str = Encoding.UTF8.GetString(recv_buf);
             CRtspResponse resp = new CRtspResponse();
-            resp.Parse(Encoding.UTF8.GetString(recv_buf));
-            System.Diagnostics.Trace.WriteLine(Encoding.UTF8.GetString(recv_buf));
+            resp.Parse(recv_str);
+            System.Diagnostics.Trace.WriteLine(recv_str);
+
+            req.Command = RtspCommands.DESCRIBE;
+            req.CSeq = resp.CSeq + 1;
+            send_str = req.ToString();
+            System.Diagnostics.Trace.WriteLine(send_str);
+            socket.Send(Encoding.UTF8.GetBytes(send_str));
+            recv_buf = new byte[8192];
+            recv_len = socket.Receive(recv_buf);
+            recv_str = Encoding.UTF8.GetString(recv_buf);
+            resp = new CRtspResponse();
+            resp.Parse(recv_str);
+
+            System.Diagnostics.Trace.WriteLine(recv_str);
+            recv_len = socket.Receive(recv_buf);
+            recv_str = Encoding.UTF8.GetString(recv_buf, 0, recv_len);
+            System.Diagnostics.Trace.WriteLine(recv_str);
+            Dictionary<string, string> hh = new Dictionary<string, string>();
+            string[] sl = recv_str.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach(string oo in sl)
+            {
+
+            }
+            CSDP sdp = new CSDP();
+            
+
+
+
         }
     }
 
