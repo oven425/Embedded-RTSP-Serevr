@@ -32,6 +32,9 @@ namespace WPF_RtspT
             
         }
 
+        Socket m_Socket_RTP;
+        Socket m_Socket_RTCP;
+        OverTypes m_OverTypes;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -72,13 +75,21 @@ namespace WPF_RtspT
             Dictionary<string, string> hh = new Dictionary<string, string>();
             string[] sl = recv_str.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             
+            
             foreach(string oo in sl)
             {
 
             }
             CSDP sdp = new CSDP();
             
+            switch(this.m_OverTypes)
+            {
+                case OverTypes.UDP:
+                    {
 
+                    }
+                    break;
+            }
 
 
         }

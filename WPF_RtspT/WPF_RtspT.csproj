@@ -64,6 +64,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CAviReader.cs" />
+    <Compile Include="CRTCP.cs" />
+    <Compile Include="CRTP.cs" />
     <Compile Include="CRtspRequest.cs" />
     <Compile Include="CRtspResponse.cs" />
     <Compile Include="CSDP.cs" />
