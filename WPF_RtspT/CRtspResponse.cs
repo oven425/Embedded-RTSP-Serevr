@@ -45,9 +45,9 @@ namespace WPF_RtspT
                     string key_str = sl[i].Substring(0, findindex).TrimEnd();
                     string value_str = sl[i].Substring(findindex + 1, sl[i].Length - (findindex + 1)).TrimStart();
                     this.Headers[key_str] = value_str;
-                    switch(key_str)
+                    switch(key_str.ToUpperInvariant())
                     {
-                        case "CSeq":
+                        case "CSEQ":
                             {
                                 this.CSeq = int.Parse(value_str);
                             }
@@ -57,7 +57,7 @@ namespace WPF_RtspT
                                 this.ContentLength = int.Parse(value_str);
                             }
                             break;
-                        case "Serevr":
+                        case "SERVER":
                             {
                                 this.Server = value_str;
                             }

@@ -37,6 +37,7 @@ namespace WPF_RtspT
         OverTypes m_OverTypes;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8554));
             CRtspRequest req = new CRtspRequest();
@@ -81,15 +82,38 @@ namespace WPF_RtspT
 
             }
             CSDP sdp = new CSDP();
-            
-            switch(this.m_OverTypes)
+            req.Command = RtspCommands.SETUP;
+            req.CSeq = resp.CSeq + 1;
+            switch (this.m_OverTypes)
             {
                 case OverTypes.UDP:
                     {
-
+                        this.m_Socket_RTP = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                        IPEndPoint ipendpoint = new IPEndPoint(IPAddress.Any, 0);
+                        this.m_Socket_RTP.Bind(ipendpoint);
+                        this.m_Socket_RTCP = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                        ipendpoint = new IPEndPoint(IPAddress.Any, 0);
+                        this.m_Socket_RTCP.Bind(ipendpoint);
+                        req.Transport = new CTransport();
+                        req.Transport.ClientPort_RTP = (this.m_Socket_RTP.LocalEndPoint as IPEndPoint).Port;
+                        req.Transport.ClientPort_RTCP = (this.m_Socket_RTCP.LocalEndPoint as IPEndPoint).Port;
+                        //req.Transport.ClientPort_RTP = 1001;
+                        //req.Transport.ClientPort_RTCP = 1002;
+                        req.URL = new Uri("rtsp://127.0.0.1:8554/test/trackID=0");
                     }
                     break;
             }
+            send_str = req.ToString();
+            System.Diagnostics.Trace.WriteLine(send_str);
+            socket.Send(Encoding.UTF8.GetBytes(send_str));
+            recv_buf = new byte[8192];
+            recv_len = socket.Receive(recv_buf);
+            recv_str = Encoding.UTF8.GetString(recv_buf);
+            resp = new CRtspResponse();
+            resp.Parse(recv_str);
+
+            System.Diagnostics.Trace.WriteLine(recv_str);
+
 
 
         }
