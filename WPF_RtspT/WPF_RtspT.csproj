@@ -69,6 +69,7 @@
     <Compile Include="CRtspRequest.cs" />
     <Compile Include="CRtspResponse.cs" />
     <Compile Include="CSDP.cs" />
+    <Compile Include="CTransport.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

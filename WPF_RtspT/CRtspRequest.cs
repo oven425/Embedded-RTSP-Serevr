@@ -13,24 +13,13 @@ namespace WPF_RtspT
         Http
     }
 
-    public class CTransport
-    {
-        public int ClientPort_RTP { set; get; }
-        public int ClientPort_RTCP { set; get; }
-        public int ServerPort_RTP { set; get; }
-        public int ServerPort_RTCP { set; get; }
-        public override string ToString()
-        {
-            string str = $"Transport: RTP/AVP;unicast;client_port={this.ClientPort_RTP}-{this.ClientPort_RTCP}";
-            return str;
-        }
-    }
+    
     public class CRtspRequest
     {
         public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
         public RtspCommands Command { set; get; }
         public string Version { set; get; }
-        public Uri URL { set; get; }
+        public string URL { set; get; }
         public int CSeq { set; get; }
         public CTransport Transport;
         public override string ToString()

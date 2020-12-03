@@ -37,12 +37,12 @@ namespace WPF_RtspT
         OverTypes m_OverTypes;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            Uri uri = new Uri("rtsp://127.0.0.1:8554/test");
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8554));
+            socket.Connect(new IPEndPoint(IPAddress.Parse(uri.Host), uri.Port));
             CRtspRequest req = new CRtspRequest();
             req.Command = RtspCommands.OPTIONS;
-            req.URL = new Uri("rtsp://127.0.0.1:8554/test");
+            req.URL = uri.OriginalString;
             req.Version = "RTSP/1.0";
             req.CSeq = req.CSeq + 1;
             string send_str = "OPTIONS rtsp://example.com/media.mp4 RTSP/1.0" + "\r\n";
@@ -99,7 +99,7 @@ namespace WPF_RtspT
                         req.Transport.ClientPort_RTCP = (this.m_Socket_RTCP.LocalEndPoint as IPEndPoint).Port;
                         //req.Transport.ClientPort_RTP = 1001;
                         //req.Transport.ClientPort_RTCP = 1002;
-                        req.URL = new Uri("rtsp://127.0.0.1:8554/test/trackID=0");
+                        req.URL = "rtsp://127.0.0.1:8554/test/trackID=0";
                     }
                     break;
             }

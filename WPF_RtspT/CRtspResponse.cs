@@ -15,6 +15,7 @@ namespace WPF_RtspT
         public int CSeq { set; get; }
         public int ContentLength { set; get; }
         public string Server { set; get; }
+        public CTransport TransPort { set; get; }
         public bool Parse(string data)
         {
             this.Headers.Clear();
@@ -45,7 +46,8 @@ namespace WPF_RtspT
                     string key_str = sl[i].Substring(0, findindex).TrimEnd();
                     string value_str = sl[i].Substring(findindex + 1, sl[i].Length - (findindex + 1)).TrimStart();
                     this.Headers[key_str] = value_str;
-                    switch(key_str.ToUpperInvariant())
+                    //Transport: RTP/AVP/UDP;unicast;client_port=64445-64446;server_port=64447-64448;ssrc=0CCB61AB;mode=play
+                    switch (key_str.ToUpperInvariant())
                     {
                         case "CSEQ":
                             {
@@ -62,6 +64,14 @@ namespace WPF_RtspT
                                 this.Server = value_str;
                             }
                             break;
+                        case "TRANSPORT":
+                            {
+                                this.TransPort = this.ParseTransPort(value_str);
+                                
+                                
+
+                            }
+                            break;
                     }
                 }
                 
@@ -69,6 +79,24 @@ namespace WPF_RtspT
             
             return true;
         }
+
+        CTransport ParseTransPort(String data)
+        {
+            CTransport transport = new CTransport();
+            string[] sl = data.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            this.TransPort.Type = sl[0].Trim();
+            for (int j = 2; j < sl.Length; j++)
+            {
+                string[]keyvalues =  sl[j].Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+                if(keyvalues.Length == 2)
+                {
+
+                }
+            }
+
+            return transport;
+        }
         
     }
+
 }
